@@ -1,2 +1,4 @@
 __pycache__
 venv/
+backend/files/
+test_pdf_view/
