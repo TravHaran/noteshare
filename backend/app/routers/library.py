@@ -1,6 +1,7 @@
+from operator import and_
 from .. import models, schemas, oauth2 
 from fastapi import Response, status, HTTPException, Depends, APIRouter
-from sqlalchemy import func, distinct
+from sqlalchemy import func, distinct, and_
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from ..database import get_db
@@ -15,7 +16,6 @@ router = APIRouter(
 @router.get("/")
 def get_libraries(
                 db: Session = Depends(get_db), 
-                current_user: int = Depends(oauth2.get_current_user), 
                 limit: int = 10, 
                 skip: int = 0, 
                 search: Optional[str] = ""
@@ -28,23 +28,55 @@ def get_libraries(
     result = result_query.filter(models.Library.title.contains(search)).limit(limit).offset(skip).all()
     return result
 
+# Get library
+@router.get("/{id}")
+def get_library(id: int,
+                db: Session = Depends(get_db)
+                ):
+    result_query = db.query(models.Library.id, models.Library.title, models.Library.description, models.Library.owner_id, models.Library.public, models.Library.created_at,
+                    func.count(distinct(models.Patron.id)).label("patrons"),
+                    func.count(distinct(models.Book.id)).label("books")).join(
+                    models.Patron, models.Patron.library_id == models.Library.id, isouter=True).join(
+                    models.Book, models.Book.library_id == models.Library.id, isouter=True).group_by(models.Library.id)
+    result = result_query.filter(models.Library.id==id).first()
+    return result
+
 # Get my libraries
-@router.get("/my-libraries", response_model=List[schemas.LibraryOut])
+# , response_model=List[schemas.LibraryOut]
+@router.get("/my-libraries")
 def get_my_libraries(
                     db: Session = Depends(get_db),
                     current_user: int = Depends(oauth2.get_current_user),
+                    limit: int = 10, 
+                    skip: int = 0, 
+                    search: Optional[str] = ""
                     ):
-                    
-    pass
+    sub_query = db.query(models.Patron.library_id).where(models.Patron.user_id == current_user.id)
+    query = db.query((models.Library.id).label("library_id"), models.Library.title, models.Library.description, models.Library.owner_id, models.Library.public, models.Library.created_at,
+                        func.count(distinct(models.Patron.id)).label("patrons"),
+                        func.count(distinct(models.Book.id)).label("books")).join(
+                        models.Patron, models.Patron.library_id == models.Library.id, isouter=True).join(
+                        models.Book, models.Book.library_id == models.Library.id, isouter=True).filter(models.Library.id.in_(sub_query)).group_by(models.Library.id)
+    result = query.filter(models.Library.title.contains(search)).limit(limit).offset(skip).all()
+    return result
 
-# Get library
-@router.get("/{id}", response_model=List[schemas.LibraryOut])
-def get_library(
-                db: Session = Depends(get_db), 
-                current_user: int = Depends(oauth2.get_current_user),
-                ):
-        
-    pass
+@router.get("/my-library-admin-level/{id}")
+def get_my_library_admin_level(id: int,
+                    db: Session = Depends(get_db),
+                    current_user: int = Depends(oauth2.get_current_user)
+                    ):
+    result = db.query(models.Patron.admin_level).where(and_(models.Patron.user_id == current_user.id, models.Patron.library_id == id)).first()
+    if result == None:
+        # either the library doesnt exist
+        check = db.query(models.Library).filter(models.Library.id == id).first()
+        if check == None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"library with id: {id} does not exist")
+        else:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail=f"you are not a patron in library with id {id}")
+        # or the user is not a patron of the library
+    return result
 
 # Create library
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.LibraryBase)
