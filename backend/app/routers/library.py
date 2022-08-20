@@ -1,7 +1,7 @@
 from operator import and_
 from .. import models, schemas, oauth2 
 from fastapi import Response, status, HTTPException, Depends, APIRouter
-from sqlalchemy import func, distinct, and_
+from sqlalchemy import func, distinct, and_, desc
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from ..database import get_db
@@ -26,6 +26,23 @@ def get_libraries(
                         models.Patron, models.Patron.library_id == models.Library.id, isouter=True).join(
                         models.Book, models.Book.library_id == models.Library.id, isouter=True).group_by(models.Library.id)
     result = result_query.filter(models.Library.title.contains(search)).limit(limit).offset(skip).all()
+    return result
+
+@router.get("/public")
+def get_public_libraries(
+                db: Session = Depends(get_db), 
+                limit: int = 10, 
+                skip: int = 0, 
+                search: Optional[str] = ""
+                ):
+    sub_query = db.query(models.Library.id).where(models.Library.public == True)
+    query = db.query(models.Library.id, models.Library.title, models.Library.description, models.Library.owner_id, models.Library.public, models.Library.created_at,
+                        func.count(distinct(models.Patron.id)).label("patrons"),
+                        func.count(distinct(models.Book.id)).label("books")).join(
+                        models.Patron, models.Patron.library_id == models.Library.id, isouter=True).join(
+                        models.Book, models.Book.library_id == models.Library.id, isouter=True).filter(models.Library.id.in_(sub_query)).group_by(models.Library.id).order_by(
+                            desc("patrons"))
+    result = query.filter(models.Library.title.contains(search)).limit(limit).offset(skip).all()
     return result
 
 # Get library
