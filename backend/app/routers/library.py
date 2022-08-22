@@ -1,4 +1,3 @@
-from operator import and_
 from .. import models, schemas, oauth2 
 from fastapi import Response, status, HTTPException, Depends, APIRouter
 from sqlalchemy import func, distinct, and_, desc
@@ -20,7 +19,7 @@ def get_libraries(
                 skip: int = 0, 
                 search: Optional[str] = ""
                 ):
-    result_query = db.query(models.Library.id, models.Library.title, models.Library.description, models.Library.owner_id, models.Library.public, models.Library.created_at,
+    result_query = db.query(models.Library,
                         func.count(distinct(models.Patron.id)).label("patrons"),
                         func.count(distinct(models.Book.id)).label("books")).join(
                         models.Patron, models.Patron.library_id == models.Library.id, isouter=True).join(
@@ -36,7 +35,7 @@ def get_public_libraries(
                 search: Optional[str] = ""
                 ):
     sub_query = db.query(models.Library.id).where(models.Library.public == True)
-    query = db.query(models.Library.id, models.Library.title, models.Library.description, models.Library.owner_id, models.Library.public, models.Library.created_at,
+    query = db.query(models.Library,
                         func.count(distinct(models.Patron.id)).label("patrons"),
                         func.count(distinct(models.Book.id)).label("books")).join(
                         models.Patron, models.Patron.library_id == models.Library.id, isouter=True).join(
@@ -50,7 +49,13 @@ def get_public_libraries(
 def get_library(id: int,
                 db: Session = Depends(get_db)
                 ):
-    result_query = db.query(models.Library.id, models.Library.title, models.Library.description, models.Library.owner_id, models.Library.public, models.Library.created_at,
+    # result_query = db.query(models.Library.id, models.Library.title, models.Library.description, models.Library.owner_id, models.Library.public, models.Library.created_at,
+    #                 func.count(distinct(models.Patron.id)).label("patrons"),
+    #                 func.count(distinct(models.Book.id)).label("books")).join(
+    #                 models.Patron, models.Patron.library_id == models.Library.id, isouter=True).join(
+    #                 models.Book, models.Book.library_id == models.Library.id, isouter=True).group_by(models.Library.id)
+    # result = result_query.filter(models.Library.id==id).first()
+    result_query = db.query(models.Library,
                     func.count(distinct(models.Patron.id)).label("patrons"),
                     func.count(distinct(models.Book.id)).label("books")).join(
                     models.Patron, models.Patron.library_id == models.Library.id, isouter=True).join(
@@ -60,13 +65,10 @@ def get_library(id: int,
 
 # Get my libraries
 # , response_model=List[schemas.LibraryOut]
-@router.get("/my-libraries")
+@router.get("/mine/")
 def get_my_libraries(
                     db: Session = Depends(get_db),
                     current_user: int = Depends(oauth2.get_current_user),
-                    limit: int = 10, 
-                    skip: int = 0, 
-                    search: Optional[str] = ""
                     ):
     sub_query = db.query(models.Patron.library_id).where(models.Patron.user_id == current_user.id)
     query = db.query((models.Library.id).label("library_id"), models.Library.title, models.Library.description, models.Library.owner_id, models.Library.public, models.Library.created_at,
@@ -74,7 +76,7 @@ def get_my_libraries(
                         func.count(distinct(models.Book.id)).label("books")).join(
                         models.Patron, models.Patron.library_id == models.Library.id, isouter=True).join(
                         models.Book, models.Book.library_id == models.Library.id, isouter=True).filter(models.Library.id.in_(sub_query)).group_by(models.Library.id)
-    result = query.filter(models.Library.title.contains(search)).limit(limit).offset(skip).all()
+    result = query.all()
     return result
 
 @router.get("/my-library-admin-level/{id}")
@@ -96,7 +98,7 @@ def get_my_library_admin_level(id: int,
     return result
 
 # Create library
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.LibraryBase)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.Library)
 def create_library(library: schemas.LibraryCreate,
                     db: Session = Depends(get_db),
                     current_user: int = Depends(oauth2.get_current_user)):

@@ -1,3 +1,4 @@
+from turtle import up
 from fastapi import FastAPI, Body, Request, File, UploadFile, Form, status, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
@@ -54,7 +55,6 @@ def write_home(request: Request, user_name: str):
 
 @app.post("/submitform")
 async def handle_form(files: list[UploadFile] = File(...),):
-    # Modify this function to allow multiple pdf uploads, in which case we would simple merge the pdfs into one and store them.
     uploaded_files = []
     for file in files:
         print(file.filename)
@@ -86,4 +86,4 @@ async def handle_form(files: list[UploadFile] = File(...),):
     pdf_file = PdfReader(file_location)
     page_count = len(pdf_file.pages)
     print(page_count)  # save in database
-    return {"uploaded_file": file_location}
+    return {"uploaded_file": file_location, "page_count": page_count}

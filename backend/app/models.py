@@ -4,6 +4,21 @@ from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 from sqlalchemy.orm import relationship, backref
 
+class Library(Base):
+    __tablename__ = "libraries"
+    id = Column(Integer, primary_key=True, nullable=False)
+    title = Column(String, nullable=False)
+    description = Column(String, nullable=True)
+    public = Column(Boolean, server_default='True', nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
+    owner_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    owner = relationship("User", backref="libraries")
+    # Relationship
+    book = relationship("Book", backref="libraries")
+    patron_invite = relationship("PatronInvite", backref="libraries")
+    patron_request = relationship("PatronRequest", backref="libraries")
+    patron = relationship("Patron", backref="libraries")
+
 followers = Table(
     'followers', Base.metadata,
     Column('user_id', Integer,
@@ -22,10 +37,11 @@ class User(Base):
     password = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     # Relationships
-    library = relationship("Library", backref="user")
-    book = relationship("Book", backref="user")
+    # library = relationship("Library", backref="user")
+    # book = relationship("Book", backref="user")
+    # book = relationship("Book")
     book_vote = relationship("BookVote", backref="user")
-    comment = relationship("Comment", backref="user")
+    # comment = relationship("Comment", backref="user")
     comment_vote = relationship("CommentVote", backref="user")
     notification = relationship("Notification", backref="user")
 
@@ -56,20 +72,6 @@ class User(Base):
 #     Column("following_id", Integer, ForeignKey("users.id"), primary_key=True)
 # )
 
-class Library(Base):
-    __tablename__ = "libraries"
-    id = Column(Integer, primary_key=True, nullable=False)
-    title = Column(String, nullable=False)
-    description = Column(String, nullable=True)
-    owner_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    public = Column(Boolean, server_default='True', nullable=False)
-    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
-    # Relationship
-    book = relationship("Book", backref="libraries")
-    patron_invite = relationship("PatronInvite", backref="libraries")
-    patron_request = relationship("PatronRequest", backref="libraries")
-    patron = relationship("Patron", backref="libraries")
-
 class Book(Base):
     __tablename__ = "books"
     id = Column(Integer, primary_key=True, nullable=False)
@@ -78,13 +80,13 @@ class Book(Base):
     owner_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     library_id = Column(Integer, ForeignKey("libraries.id", ondelete="CASCADE"), nullable=False)
     file = Column(String, nullable=False)
-    page_count = Column(Integer, nullable=False)
+    thumbnail = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     # Relationship
     tag = relationship("Tag", secondary="book_tag_map", backref="books")
     book_vote = relationship("BookVote", backref="books")
     comment = relationship("Comment", backref="books")
-
+    owner = relationship("User")
 class Tag(Base):
     __tablename__ = "tags"
     id = Column(Integer, primary_key=True, nullable=False)
@@ -101,10 +103,10 @@ book_tag_map = Table(
 
 class BookVote(Base):
     __tablename__ = "book_votes"
-    id = Column(Integer, primary_key=True, nullable=False)
-    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    book_id = Column(Integer, ForeignKey("books.id", ondelete="CASCADE"), nullable=False)
-    dir = Column(SmallInteger, nullable=False)
+    # id = Column(Integer, primary_key=True, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
+    book_id = Column(Integer, ForeignKey("books.id", ondelete="CASCADE"), primary_key=True)
+    dir = Column(Integer, nullable=False)
     __table_args__ = (CheckConstraint(dir.in_([-1, 0, 1])),)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     # Relationship
@@ -112,18 +114,19 @@ class BookVote(Base):
 class Comment(Base):
     __tablename__ = "comments"
     id = Column(Integer, primary_key=True, nullable=False)
-    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    book_id = Column(Integer, ForeignKey("books.id", ondelete="CASCADE"), nullable=False)
     content = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    book_id = Column(Integer, ForeignKey("books.id", ondelete="CASCADE"), nullable=False)
     # Relationship
     comment_vote = relationship("CommentVote", backref="comments")
+    owner = relationship("User", backref="comments")
 
 class CommentVote(Base):
     __tablename__ = "comment_votes"
-    id = Column(Integer, primary_key=True, nullable=False)
-    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    comment_id = Column(Integer, ForeignKey("comments.id", ondelete="CASCADE"), nullable=False)
+    # id = Column(Integer, primary_key=True, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
+    comment_id = Column(Integer, ForeignKey("comments.id", ondelete="CASCADE"), primary_key=True)
     dir = Column(SmallInteger, nullable=False)
     __table_args__ = (CheckConstraint(dir.in_([-1, 0, 1])),)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))

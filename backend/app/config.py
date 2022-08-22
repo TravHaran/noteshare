@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int
     file_dir: str
     waiting_room_file_dir: str
+    thumbnail_dir: str
 
     class Config:
         env_file = "/Users/travisratnaharan/Documents/Work/noteshare/backend/.env"
