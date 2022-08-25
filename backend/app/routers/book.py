@@ -1,6 +1,6 @@
 from .. import models, schemas, oauth2
 from fastapi import Response, status, HTTPException, Depends, APIRouter, File, UploadFile, Form
-from sqlalchemy import func, and_, or_
+from sqlalchemy import func, and_, or_, case, literal_column
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from ..database import get_db
@@ -49,6 +49,7 @@ async def create_book(
             file_location = f"{settings.file_dir}/{filename}"
         with open(file_location, "wb+") as file_object:
             file_object.write(content)
+            file_object.close()
         uploaded_files.append(file_location)
 
     if len(uploaded_files) > 1:
@@ -77,19 +78,94 @@ async def create_book(
 
 
 @router.get("/")
-def get_books(db: Session = Depends(get_db), limit: int = 10, skip: int = 0, search: Optional[str] = ""):
-    results = db.query(models.Book).filter(models.Library.public == True).filter(models.Book.title.contains(search)).limit(limit).offset(skip).all()
+def get_books(current_user: int = Depends(oauth2.get_current_user), db: Session = Depends(get_db), limit: int = 10, skip: int = 0, search: Optional[str] = ""):
+    results = db.query(models.Book,
+                            models.User.username.label('owner'),
+                            models.Library.title.label('library'),
+                            func.count(models.Comment.id).label('comments'),
+                            case((and_((models.BookVote.dir==1),(models.BookVote.user_id==current_user.id)), True), else_=False).label('liked'),
+                            case((and_((models.BookVote.dir==-1),(models.BookVote.user_id==current_user.id)), True), else_=False).label('disliked'),
+                            func.sum(case((models.BookVote.dir==1, 1), else_=0)).label('likes'),
+                            func.sum(case((models.BookVote.dir==-1, 1), else_=0)).label('dislikes')).join(
+                            models.BookVote, models.Book.id == models.BookVote.book_id, isouter=True).join(
+                            models.Comment, models.Book.id == models.Comment.book_id, isouter=True).join(
+                            models.Library, models.Book.library_id == models.Library.id, isouter=True).join(
+                            models.User, models.Book.owner_id == models.User.id, isouter=True).group_by(
+                            models.Book.id, models.BookVote.user_id, models.BookVote.dir, models.Library.title, models.User.username).filter(models.Book.title.contains(search)).limit(limit).offset(skip).all()
     return results
 
 @router.get("/public")
-def get_books(db: Session = Depends(get_db), limit: int = 10, skip: int = 0, search: Optional[str] = ""):
+def get_books(current_user: int = Depends(oauth2.get_current_user), db: Session = Depends(get_db), limit: int = 10, skip: int = 0, search: Optional[str] = ""):
     sub_query = db.query(models.Library.id).where(models.Library.public==True)
-    results = db.query(models.Book).filter(models.Book.library_id.in_(sub_query)).filter(models.Book.title.contains(search)).limit(limit).offset(skip).all()
+    main_query = db.query(models.Book,
+                            models.User.username.label('owner'),
+                            models.Library.title.label('library'),
+                            func.count(models.Comment.id).label('comments'),
+                            case((and_((models.BookVote.dir==1),(models.BookVote.user_id==current_user.id)), True), else_=False).label('liked'),
+                            case((and_((models.BookVote.dir==-1),(models.BookVote.user_id==current_user.id)), True), else_=False).label('disliked'),
+                            func.sum(case((models.BookVote.dir==1, 1), else_=0)).label('likes'),
+                            func.sum(case((models.BookVote.dir==-1, 1), else_=0)).label('dislikes')).join(
+                            models.BookVote, models.Book.id == models.BookVote.book_id, isouter=True).join(
+                            models.Comment, models.Book.id == models.Comment.book_id, isouter=True).join(
+                            models.Library, models.Book.library_id == models.Library.id, isouter=True).join(
+                            models.User, models.Book.owner_id == models.User.id, isouter=True).filter(
+                            models.Book.library_id.in_(sub_query)).group_by(
+                            models.Book.id, models.BookVote.user_id, models.BookVote.dir, models.Library.title, models.User.username)
+    results = main_query.filter(models.Book.title.contains(search)).limit(limit).offset(skip).all()
+    return results
+
+@router.get("/liked")
+def get_books(current_user: int = Depends(oauth2.get_current_user), db: Session = Depends(get_db), limit: int = 10, skip: int = 0, search: Optional[str] = ""):
+    sub_query = db.query(models.BookVote.book_id).where(models.BookVote.user_id==current_user.id)
+    main_query = db.query(models.Book,
+                            models.User.username.label('owner'),
+                            models.Library.title.label('library'),
+                            func.count(models.Comment.id).label('comments'),
+                            case((and_((models.BookVote.dir==1),(models.BookVote.user_id==current_user.id)), True), else_=False).label('liked'),
+                            case((and_((models.BookVote.dir==-1),(models.BookVote.user_id==current_user.id)), True), else_=False).label('disliked'),
+                            func.sum(case((models.BookVote.dir==1, 1), else_=0)).label('likes'),
+                            func.sum(case((models.BookVote.dir==-1, 1), else_=0)).label('dislikes')).join(
+                            models.BookVote, models.Book.id == models.BookVote.book_id, isouter=True).join(
+                            models.Comment, models.Book.id == models.Comment.book_id, isouter=True).join(
+                            models.Library, models.Book.library_id == models.Library.id, isouter=True).join(
+                            models.User, models.Book.owner_id == models.User.id, isouter=True).filter(
+                            models.Book.id.in_(sub_query)).group_by(
+                            models.Book.id, models.BookVote.user_id, models.BookVote.dir, models.Library.title, models.User.username)
+    results = main_query.filter(models.Book.title.contains(search)).limit(limit).offset(skip).all()
+    return results
+
+@router.get("/mine")
+def get_books(current_user: int = Depends(oauth2.get_current_user), db: Session = Depends(get_db), limit: int = 10, skip: int = 0, search: Optional[str] = ""):
+    main_query = db.query(models.Book,
+                            models.User.username.label('owner'),
+                            models.Library.title.label('library'),
+                            func.count(models.Comment.id).label('comments'),
+                            func.sum(case((models.BookVote.dir==1, 1), else_=0)).label('likes'),
+                            func.sum(case((models.BookVote.dir==-1, 1), else_=0)).label('dislikes')).join(
+                            models.BookVote, models.Book.id == models.BookVote.book_id, isouter=True).join(
+                            models.Comment, models.Book.id == models.Comment.book_id, isouter=True).join(
+                            models.Library, models.Book.library_id == models.Library.id, isouter=True).join(
+                            models.User, models.Book.owner_id == models.User.id, isouter=True).filter(
+                            models.Book.owner_id==current_user.id).group_by(
+                            models.Book.id, models.BookVote.user_id, models.BookVote.dir, models.Library.title, models.User.username)
+    results = main_query.filter(models.Book.title.contains(search)).limit(limit).offset(skip).all()
     return results
 
 @router.get("/from-library/{id}")
-def get_books_from_library(id: int, db: Session = Depends(get_db), limit: int = 10, skip: int = 0, search: Optional[str] = ""):
-    results = db.query(models.Book).where(models.Book.library_id == id).filter(models.Book.title.contains(search)).limit(limit).offset(skip).all()
+def get_books_from_library(id: int, current_user: int = Depends(oauth2.get_current_user), db: Session = Depends(get_db), limit: int = 10, skip: int = 0, search: Optional[str] = ""):
+    query = db.query(models.Book,
+                            models.User.username.label('owner'),
+                            models.Library.title.label('library'),
+                            func.count(models.Comment.id).label('comments'),
+                            func.sum(case((models.BookVote.dir==1, 1), else_=0)).label('likes'),
+                            func.sum(case((models.BookVote.dir==-1, 1), else_=0)).label('dislikes')).join(
+                            models.BookVote, models.Book.id == models.BookVote.book_id, isouter=True).join(
+                            models.Comment, models.Book.id == models.Comment.book_id, isouter=True).join(
+                            models.Library, models.Book.library_id == models.Library.id, isouter=True).join(
+                            models.User, models.Book.owner_id == models.User.id, isouter=True).filter(
+                            models.Book.library_id == id).group_by(
+                            models.Book.id, models.BookVote.user_id, models.BookVote.dir, models.Library.title, models.User.username)
+    results = query.filter(models.Book.title.contains(search)).limit(limit).offset(skip).all()
     return results
 
 @router.delete("/{id}")

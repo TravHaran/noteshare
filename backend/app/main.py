@@ -13,7 +13,7 @@ import os
 # to start server run CL: uvicorn app.main:app
 # to start server and monitor code changes run CL: uvicorn main:app --reload
 
-templates = Jinja2Templates(directory="../../test_frontend")
+templates = Jinja2Templates(directory="/Users/travisratnaharan/Documents/Work/noteshare/test_frontend/")
 # models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -53,7 +53,7 @@ def write_home(request: Request, user_name: str):
     return templates.TemplateResponse("home.html", {"request": request, "username": user_name})
 
 
-@app.post("/submitform")
+@app.post("/submitform/")
 async def handle_form(files: list[UploadFile] = File(...),):
     uploaded_files = []
     for file in files:
@@ -87,3 +87,4 @@ async def handle_form(files: list[UploadFile] = File(...),):
     page_count = len(pdf_file.pages)
     print(page_count)  # save in database
     return {"uploaded_file": file_location, "page_count": page_count}
+

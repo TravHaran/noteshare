@@ -10,14 +10,15 @@ class Library(Base):
     title = Column(String, nullable=False)
     description = Column(String, nullable=True)
     public = Column(Boolean, server_default='True', nullable=False)
+    banner = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     owner_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    owner = relationship("User", backref="libraries")
     # Relationship
-    book = relationship("Book", backref="libraries")
-    patron_invite = relationship("PatronInvite", backref="libraries")
-    patron_request = relationship("PatronRequest", backref="libraries")
-    patron = relationship("Patron", backref="libraries")
+    users = relationship("User", back_populates="libraries")
+    books = relationship("Book", back_populates="libraries")
+    patron_invite = relationship("PatronInvite", back_populates="libraries")
+    patron_request = relationship("PatronRequest", back_populates="libraries")
+    patrons = relationship("User", secondary="patrons", back_populates="libraries")
 
 followers = Table(
     'followers', Base.metadata,
@@ -37,21 +38,22 @@ class User(Base):
     password = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     # Relationships
-    # library = relationship("Library", backref="user")
-    # book = relationship("Book", backref="user")
-    # book = relationship("Book")
-    book_vote = relationship("BookVote", backref="user")
-    # comment = relationship("Comment", backref="user")
-    comment_vote = relationship("CommentVote", backref="user")
-    notification = relationship("Notification", backref="user")
+    libraries = relationship("Library", back_populates="users")
+    books = relationship("Book", back_populates="users")
+    comments = relationship("Comment", back_populates="users")
+    book_votes = relationship("BookVote", back_populates="users")
+    comment_votes = relationship("CommentVote", back_populates="users")
+    notifications = relationship("Notification", back_populates="users")
+    patrons = relationship("Library", secondary="patrons", back_populates="users", overlaps="patrons")
+    # patron = relationship("Patron", back_populates="users")
+    # patron_invite = relationship("PatronInvite", back_populates="users")
+    # patron_request = relationship("PatronRequest", back_populates="users")
 
     # librarian_patron_invite = relationship("PatronInvite", foreign_keys='PatronInvite.librarian_id', back_populates="librarian_patron_invite")
     # invitee_patron_invite = relationship("PatronInvite", foreign_keys='PatronInvite.invitee_id', back_populates="invitee_patron_invite")
 
     # user_patron_request = relationship("PatronRequest", foreign_keys='PatronRequest.user_id', back_populates="user_patron_request")
     # librarian_patron_request = relationship("PatronRequest", foreign_keys='PatronRequest.librarian_id', back_populates="librarian_patron_request")
-    
-    patron = relationship("Patron", backref="user")
 
     followers = relationship(
         'User', secondary=followers, cascade='all', lazy='dynamic',
@@ -83,16 +85,29 @@ class Book(Base):
     thumbnail = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     # Relationship
-    tag = relationship("Tag", secondary="book_tag_map", backref="books")
-    book_vote = relationship("BookVote", backref="books")
-    comment = relationship("Comment", backref="books")
-    owner = relationship("User")
+    tag = relationship("Tag", secondary="book_tag_map", back_populates="books")
+    book_votes = relationship("BookVote", back_populates="books")
+    comments = relationship("Comment", back_populates="books")
+    users = relationship("User", back_populates="books")
+    libraries = relationship("Library", back_populates="books")
+    tags = relationship(
+        "Tag",
+        secondary="book_tag_map",
+        back_populates="books",
+        overlaps="tag"
+    )
+
 class Tag(Base):
     __tablename__ = "tags"
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     # Relationship
+    books = relationship(
+        "Book",
+        secondary="book_tag_map",
+        back_populates="tags"
+    )
 
 book_tag_map = Table(
     "book_tag_map",
@@ -110,6 +125,8 @@ class BookVote(Base):
     __table_args__ = (CheckConstraint(dir.in_([-1, 0, 1])),)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     # Relationship
+    books = relationship("Book", back_populates="book_votes")
+    users = relationship("User", back_populates="book_votes")
 
 class Comment(Base):
     __tablename__ = "comments"
@@ -119,8 +136,9 @@ class Comment(Base):
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     book_id = Column(Integer, ForeignKey("books.id", ondelete="CASCADE"), nullable=False)
     # Relationship
-    comment_vote = relationship("CommentVote", backref="comments")
-    owner = relationship("User", backref="comments")
+    comment_votes = relationship("CommentVote", back_populates="comments")
+    users = relationship("User", back_populates="comments")
+    books = relationship("Book", back_populates="comments")
 
 class CommentVote(Base):
     __tablename__ = "comment_votes"
@@ -131,16 +149,26 @@ class CommentVote(Base):
     __table_args__ = (CheckConstraint(dir.in_([-1, 0, 1])),)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     # Relationship
+    comments = relationship("Comment", back_populates="comment_votes")
+    users = relationship("User", back_populates="comment_votes")
+
+# book_tag_map = Table(
+#     "book_tag_map",
+#     Base.metadata,
+#     Column("book_id", ForeignKey("books.id", ondelete="CASCADE"), primary_key=True),
+#     Column("tag_id", ForeignKey("tags.id", ondelete="CASCADE"), primary_key=True)
+# )
 
 class Patron(Base):
     __tablename__ = "patrons"
-    id = Column(Integer, primary_key=True, nullable=False)
-    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    library_id = Column(Integer, ForeignKey("libraries.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
+    library_id = Column(Integer, ForeignKey("libraries.id", ondelete="CASCADE"), primary_key=True)
     admin_level = Column(String, nullable=False)
     __table_args__ = (CheckConstraint(admin_level.in_(['librarian', 'author', 'reader'])),)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     # Relationship
+    # libraries = relationship("Library", back_populates="patrons")
+    # users = relationship("User", back_populates="patrons")
 
 class PatronInvite(Base):
     __tablename__ = "patron_invites"
@@ -155,6 +183,7 @@ class PatronInvite(Base):
     # Relationship
     inviter = relationship("User", foreign_keys=[inviter_id]) 
     invitee = relationship("User", foreign_keys=[invitee_id]) 
+    libraries = relationship("Library", foreign_keys=[library_id])
     # librarian_patron_invite = relationship("User", backref=backref("users", uselist=False), foreign_keys=[inviter_id])
     # invitee_patron_invite = relationship("User", backref=backref("users", uselist=False), foreign_keys=[invitee_id])
 
@@ -171,6 +200,7 @@ class PatronRequest(Base):
     # Relationship
     requester = relationship("User", foreign_keys=[requester_id]) 
     requestee = relationship("User", foreign_keys=[requestee_id]) 
+    libraries = relationship("Library", foreign_keys=[library_id])
     # user_patron_request = relationship("User", backref=backref("users", uselist=False), foreign_keys=[requester_id])
     # librarian_patron_request = relationship("User", backref=backref("users", uselist=False), foreign_keys=[requestee_id])
 
@@ -181,6 +211,7 @@ class Notification(Base):
     message = Column(String, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     # Relationship
+    users = relationship("User", back_populates="notifications")
     
 
 

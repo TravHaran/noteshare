@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     file_dir: str
     waiting_room_file_dir: str
     thumbnail_dir: str
+    banner_dir: str
+    default_banner: str
 
     class Config:
         env_file = "/Users/travisratnaharan/Documents/Work/noteshare/backend/.env"
