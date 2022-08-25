@@ -83,12 +83,14 @@ def get_books(current_user: int = Depends(oauth2.get_current_user), db: Session 
                             models.User.username.label('owner'),
                             models.Library.title.label('library'),
                             func.count(models.Comment.id).label('comments'),
+                            func.count(models.Download.id).label('downloads'),
                             case((and_((models.BookVote.dir==1),(models.BookVote.user_id==current_user.id)), True), else_=False).label('liked'),
                             case((and_((models.BookVote.dir==-1),(models.BookVote.user_id==current_user.id)), True), else_=False).label('disliked'),
                             func.sum(case((models.BookVote.dir==1, 1), else_=0)).label('likes'),
                             func.sum(case((models.BookVote.dir==-1, 1), else_=0)).label('dislikes')).join(
                             models.BookVote, models.Book.id == models.BookVote.book_id, isouter=True).join(
                             models.Comment, models.Book.id == models.Comment.book_id, isouter=True).join(
+                            models.Download, models.Book.id == models.Download.book_id, isouter=True).join(
                             models.Library, models.Book.library_id == models.Library.id, isouter=True).join(
                             models.User, models.Book.owner_id == models.User.id, isouter=True).group_by(
                             models.Book.id, models.BookVote.user_id, models.BookVote.dir, models.Library.title, models.User.username).filter(models.Book.title.contains(search)).limit(limit).offset(skip).all()
@@ -101,12 +103,14 @@ def get_books(current_user: int = Depends(oauth2.get_current_user), db: Session 
                             models.User.username.label('owner'),
                             models.Library.title.label('library'),
                             func.count(models.Comment.id).label('comments'),
+                            func.count(models.Download.id).label('downloads'),
                             case((and_((models.BookVote.dir==1),(models.BookVote.user_id==current_user.id)), True), else_=False).label('liked'),
                             case((and_((models.BookVote.dir==-1),(models.BookVote.user_id==current_user.id)), True), else_=False).label('disliked'),
                             func.sum(case((models.BookVote.dir==1, 1), else_=0)).label('likes'),
                             func.sum(case((models.BookVote.dir==-1, 1), else_=0)).label('dislikes')).join(
                             models.BookVote, models.Book.id == models.BookVote.book_id, isouter=True).join(
                             models.Comment, models.Book.id == models.Comment.book_id, isouter=True).join(
+                            models.Download, models.Book.id == models.Download.book_id, isouter=True).join(
                             models.Library, models.Book.library_id == models.Library.id, isouter=True).join(
                             models.User, models.Book.owner_id == models.User.id, isouter=True).filter(
                             models.Book.library_id.in_(sub_query)).group_by(
@@ -121,12 +125,14 @@ def get_books(current_user: int = Depends(oauth2.get_current_user), db: Session 
                             models.User.username.label('owner'),
                             models.Library.title.label('library'),
                             func.count(models.Comment.id).label('comments'),
+                            func.count(models.Download.id).label('downloads'),
                             case((and_((models.BookVote.dir==1),(models.BookVote.user_id==current_user.id)), True), else_=False).label('liked'),
                             case((and_((models.BookVote.dir==-1),(models.BookVote.user_id==current_user.id)), True), else_=False).label('disliked'),
                             func.sum(case((models.BookVote.dir==1, 1), else_=0)).label('likes'),
                             func.sum(case((models.BookVote.dir==-1, 1), else_=0)).label('dislikes')).join(
                             models.BookVote, models.Book.id == models.BookVote.book_id, isouter=True).join(
                             models.Comment, models.Book.id == models.Comment.book_id, isouter=True).join(
+                            models.Download, models.Book.id == models.Download.book_id, isouter=True).join(
                             models.Library, models.Book.library_id == models.Library.id, isouter=True).join(
                             models.User, models.Book.owner_id == models.User.id, isouter=True).filter(
                             models.Book.id.in_(sub_query)).group_by(
@@ -140,10 +146,12 @@ def get_books(current_user: int = Depends(oauth2.get_current_user), db: Session 
                             models.User.username.label('owner'),
                             models.Library.title.label('library'),
                             func.count(models.Comment.id).label('comments'),
+                            func.count(models.Download.id).label('downloads'),
                             func.sum(case((models.BookVote.dir==1, 1), else_=0)).label('likes'),
                             func.sum(case((models.BookVote.dir==-1, 1), else_=0)).label('dislikes')).join(
                             models.BookVote, models.Book.id == models.BookVote.book_id, isouter=True).join(
                             models.Comment, models.Book.id == models.Comment.book_id, isouter=True).join(
+                            models.Download, models.Book.id == models.Download.book_id, isouter=True).join(
                             models.Library, models.Book.library_id == models.Library.id, isouter=True).join(
                             models.User, models.Book.owner_id == models.User.id, isouter=True).filter(
                             models.Book.owner_id==current_user.id).group_by(
@@ -157,10 +165,12 @@ def get_books_from_library(id: int, current_user: int = Depends(oauth2.get_curre
                             models.User.username.label('owner'),
                             models.Library.title.label('library'),
                             func.count(models.Comment.id).label('comments'),
+                            func.count(models.Download.id).label('downloads'),
                             func.sum(case((models.BookVote.dir==1, 1), else_=0)).label('likes'),
                             func.sum(case((models.BookVote.dir==-1, 1), else_=0)).label('dislikes')).join(
                             models.BookVote, models.Book.id == models.BookVote.book_id, isouter=True).join(
                             models.Comment, models.Book.id == models.Comment.book_id, isouter=True).join(
+                            models.Download, models.Book.id == models.Download.book_id, isouter=True).join(
                             models.Library, models.Book.library_id == models.Library.id, isouter=True).join(
                             models.User, models.Book.owner_id == models.User.id, isouter=True).filter(
                             models.Book.library_id == id).group_by(

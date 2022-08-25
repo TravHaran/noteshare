@@ -45,6 +45,7 @@ class User(Base):
     comment_votes = relationship("CommentVote", back_populates="users")
     notifications = relationship("Notification", back_populates="users")
     patrons = relationship("Library", secondary="patrons", back_populates="users", overlaps="patrons")
+    downloads = relationship("Download", back_populates="users")
     # patron = relationship("Patron", back_populates="users")
     # patron_invite = relationship("PatronInvite", back_populates="users")
     # patron_request = relationship("PatronRequest", back_populates="users")
@@ -87,6 +88,7 @@ class Book(Base):
     # Relationship
     tag = relationship("Tag", secondary="book_tag_map", back_populates="books")
     book_votes = relationship("BookVote", back_populates="books")
+    downloads = relationship("Download", back_populates="books")
     comments = relationship("Comment", back_populates="books")
     users = relationship("User", back_populates="books")
     libraries = relationship("Library", back_populates="books")
@@ -96,6 +98,16 @@ class Book(Base):
         back_populates="books",
         overlaps="tag"
     )
+
+class Download(Base):
+    __tablename__ = "downloads"
+    id = Column(Integer, primary_key=True, nullable=False)
+    book_id = Column(Integer, ForeignKey("books.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
+    # Relationship
+    books = relationship("Book", back_populates="downloads")
+    users = relationship("User", back_populates="downloads")
 
 class Tag(Base):
     __tablename__ = "tags"
