@@ -1,8 +1,10 @@
+from turtle import up
 from fastapi import FastAPI, Body, Request, File, UploadFile, Form, status, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from .routers import auth, book, comment, library, user, follow, notification
+
+from .routers import auth, book, comment, library, user, follow, notification, download
 from .routers import patron, patron_invite, patron_request, tag, vote_book, vote_comment
 from .database import engine, SessionLocal
 from .config import settings
@@ -12,7 +14,7 @@ import os
 # to start server run CL: uvicorn app.main:app
 # to start server and monitor code changes run CL: uvicorn main:app --reload
 
-templates = Jinja2Templates(directory="../../test_frontend")
+templates = Jinja2Templates(directory="/Users/travisratnaharan/Documents/Work/noteshare/test_frontend/")
 # models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -40,6 +42,7 @@ app.include_router(tag.router)
 app.include_router(user.router)
 app.include_router(vote_book.router)
 app.include_router(vote_comment.router)
+app.include_router(download.router)
 
 
 @app.get("/")
@@ -52,9 +55,8 @@ def write_home(request: Request, user_name: str):
     return templates.TemplateResponse("home.html", {"request": request, "username": user_name})
 
 
-@app.post("/submitform")
+@app.post("/submitform/")
 async def handle_form(files: list[UploadFile] = File(...),):
-    # Modify this function to allow multiple pdf uploads, in which case we would simple merge the pdfs into one and store them.
     uploaded_files = []
     for file in files:
         print(file.filename)
@@ -86,4 +88,5 @@ async def handle_form(files: list[UploadFile] = File(...),):
     pdf_file = PdfReader(file_location)
     page_count = len(pdf_file.pages)
     print(page_count)  # save in database
-    return {"uploaded_file": file_location}
+    return {"uploaded_file": file_location, "page_count": page_count}
+

@@ -1,6 +1,7 @@
-from pydantic import BaseModel, EmailStr, ValidationError, validator
+from pydantic import BaseModel, EmailStr
+
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 # define api response schemas for validation
 
@@ -10,7 +11,7 @@ class UserCreate(BaseModel):
     username: str
     password: str
 
-class CreateUserOut(BaseModel):
+class UserOut(BaseModel):
     id: int
     email: EmailStr
     username: str
@@ -19,18 +20,142 @@ class CreateUserOut(BaseModel):
     class Config:
         orm_mode = True
 
-class UserOut(BaseModel):
-    id: int
+class UserLogin(BaseModel):
     email: EmailStr
-    username: str
-    followers: Optional[int] = None
+    password: str
+###########################################
+
+############## Vote Schemas ##############   
+class VoteBase(BaseModel):
+    dir: int
+    class Config:
+        orm_mode = True
+
+class BookVote(VoteBase):
+    book_id: int
+
+class BookVoteOut(BaseModel):
+    vote: BookVote
+    
+    
+class CommentVote(VoteBase):
+    comment_id: int
+
+class CommentVoteOut(BaseModel):
+    vote: CommentVote
+###########################################
+
+############## Comment Schemas ##############   
+class CommentBase(BaseModel):
+    book_id: int
+    content: str
+
+class CommentCreate(CommentBase):
+    pass
+
+class Comment(CommentBase):
+    id: int
+    user_id: int
     created_at: datetime
     class Config:
         orm_mode = True
 
-class UserLogin(BaseModel):
-    email: EmailStr
-    password: str
+class CommentOut(BaseModel):
+    Comment: Comment
+    votes: CommentVote
+    user: UserOut
+    class Config:
+        orm_mode = True
+###########################################
+
+############## Book Schemas ##############
+class BookBase(BaseModel):
+    title: str
+    description: str
+    file: str
+    thumbnail: str
+    library_id: int
+
+class BookCreate(BookBase):
+    pass
+
+class BookUpdate(BaseModel):
+    title: str
+    description: str
+
+class Book(BookBase):
+    id: int
+    created_at: datetime
+    ########
+    # votes: VoteBook
+    # tags: TagOut
+    # library: Library
+    # owner: UserOut
+    ########
+    class Config:
+        orm_mode = True
+
+class LibraryBase(BaseModel):
+    title: str
+    description: str
+    public: bool = True
+
+class LibraryCreate(LibraryBase):
+    pass
+
+class Library(LibraryBase):
+    id: int
+    banner: str
+    created_at: datetime
+    ########
+    owner_id: int
+    owner: UserOut
+    ########
+    class Config:
+        orm_mode = True
+
+############## Tag Schemas ##############
+class TagCreate(BaseModel):
+    book_id: int
+    tag: str
+
+class Tag(BaseModel):
+    id: int
+    name: str
+    created_at: datetime
+    class Config:
+        orm_mode = True
+
+class TagOut(BaseModel):
+    tag: Tag
+    # book: Book
+    class Config:
+        orm_mode = True
+
+class TagDelete(BaseModel):
+    tag_ids: list[int]
+###########################################
+
+class BookOut(BaseModel):
+    book: Book
+    owner: UserOut
+    library: Library
+    likes: int
+    dislikes: int
+    tags: TagOut
+    comments: CommentOut
+    class Config:
+        orm_mode = True
+###########################################
+
+############## Library Schemas ##############
+
+class LibraryOut(BaseModel):
+    library: Library
+    patrons: int
+    books: BookOut
+    class Config:
+        orm_mode = True
 ###########################################
 
 ############## Follower Schemas ##############
@@ -53,82 +178,13 @@ class TokenData(BaseModel):
     id: Optional[str] = None
 ###########################################
 
-############## Library Schemas ##############
-class LibraryCreate(BaseModel):
-    title: str
-    description: str
-    public: bool = True
-
-class LibraryBase(BaseModel):
-    id: int
-    title: str
-    description: str
-    ########
-    owner_id: int
-    ########
-    public: bool = True
-    created_at: datetime
-    class Config:
-        orm_mode = True
-
-class Library(BaseModel):
-    id: int
-    title: str
-    description: str
-    patrons: int
-    books: int
-    ########
-    owner_id: int
-    ########
-    public: bool = True
-    created_at: datetime
-    class Config:
-        orm_mode = True
-
-class LibraryOut(BaseModel):
-    library: Library
-###########################################
-
-############## Book Schemas ##############
-class BookCreate(BaseModel):
-    title: str
-    description: Optional[str] = None
-    file: str
-    library_id: int
-
-class Book(BaseModel):
-    id: int
-    title: str
-    description: Optional[str] = None
-    file: str
-    page_count: int
-    likes: int
-    dislikes: int
-    tags: list
-    comments: int
-    ########
-    library: Library
-    owner: UserOut
-    ########
-    created_at: datetime
-    class Config:
-        orm_mode = True
-
-class BookOut(BaseModel):
-    book: Book
-###########################################
-
 ############## PatronRequest Schemas ##############
 class PatronRequestBase(BaseModel):
-    admin_level = str
-    @validator('admin_level', check_fields=False)
-    def verify_admin_level(cls, v):
-        options = ['author', 'reader']
-        if v not in options:
-            raise ValueError(f'invalid admin level, please select from valid options: {options}')
+    library_id: int
+    admin_level: str
 
 class PatronRequestCreate(PatronRequestBase):
-    library_id: int
+    pass
 
 class PatronRequest(PatronRequestBase):
     # User can only use this if they are the librarian of the library to which this request was directed to
@@ -151,17 +207,13 @@ class PatronRequestResponse(BaseModel):
 
 ############## PatronInvite Schemas ##############
 class PatronInviteBase(BaseModel):
-    admin_level = str
-    @validator('admin_level', check_fields=False)
-    def verify_admin_level(cls, v):
-        options = ['author', 'reader']
-        if v not in options:
-            raise ValueError(f'invalid admin level, please select from valid options: {options}')
+    library_id: int
+    patron_id: int
+    admin_level: str
 
 class PatronInviteCreate(PatronInviteBase):
     # this action can only be performed by librarian of library to which aptron is being invited to
-    library_id: int
-    patron_id: int
+    pass
     
 class PatronInvite(PatronInviteBase):
     id: int
@@ -182,71 +234,27 @@ class PatronInviteResponse(BaseModel):
 ###########################################
 
 ############## Patron Schemas ##############
-class GetPatrons(BaseModel):
+class PatronBase(BaseModel):
     library_id: int
+    user_id: int
+    admin_level: str
 
-class Patron(BaseModel):
+class PatronCreate(PatronBase):
+    pass
+
+class Patron(PatronBase):
     id: int
     ########
     user: UserOut
     ########
-    admin_level = str
-    @validator('admin_level', check_fields=False)
-    def validate_admin_level(cls, value):
-        options = ['librarian', 'author', 'reader']
-        if value not in options:
-            raise ValueError(f'invalid admin level, please select from valid options: {options}')
     created_at: datetime
-
-class GetPatronsOut(BaseModel):
-    Patron: Patron
-###########################################
-
-############## Comment Schemas ##############   
-class CommentCreate(BaseModel):
-    book_id: int
-    content: str
-
-class Comment(BaseModel):
-    id: int
-    user_id: int
-    created_at: datetime
-    likes: int
     class Config:
         orm_mode = True
 
-class CommentOut(BaseModel):
-    Comment: Comment
-###########################################
-
-############## Like Schemas ##############   
-class VoteBase(BaseModel):
-    dir: int
-    @validator('dir', check_fields=False)
-    def validate_admin_level(cls, v):
-        options = [-1, 0, 1]
-        if v not in options:
-            raise ValueError(f'invalid vote, please select from valid options: {options}')
-
-class VoteBook(VoteBase):
-    book_id: int
-
-class VoteComment(VoteBase):
-    comment_id: int
-###########################################
-
-############## Tag Schemas ##############
-class TagCreate(BaseModel):
-    book_id: int
-    tag: str
-
-class Tag(BaseModel):
-    id: int
-    name: str
-    created_at: datetime
-
-class TagOut(BaseModel):
-    tag: Tag
+class GetPatronsOut(BaseModel):
+    Patron: Patron
+    class Config:
+        orm_mode = True
 ###########################################
 
 ############## Notification Schemas ##############
