@@ -1,0 +1,59 @@
+[  
+        {"id": 1, 
+        "title":"Big O Notation", 
+        "content": "/PDFs/BigONotation.pdf.pdf", 
+        "description": "Hey guys I just spent time working on this note, hope you enjoy!", 
+        "upVotes": 40000, 
+        "downVotes": 2000
+        },
+        {"id": 2, 
+        "title":"Difference Between ML AI", 
+        "content": "/PDFs/Difference_Between_ML_and_AI.pdf", 
+        "description": "Hey guys I just spent time working on this note, hope you enjoy!", 
+        "upVotes": 40000, 
+        "downVotes": 2000
+        },
+        {"id": 3, 
+        "title":"Machine Learning Algorithms Cheatsheet", 
+        "content": "/PDFs/Machine_Learning_Algorithms_Cheatsheet.pdf", 
+        "description": "Hey guys I just spent time working on this note, hope you enjoy!", 
+        "upVotes": 40000, 
+        "downVotes": 2000
+        },
+        {"id": 4, 
+        "title":"MULTIPLE POLYNOMIAL REGRESSION", 
+        "content": "/PDFs/MULTIPLE_POLYNOMIAL_REGRESSION.pdf", 
+        "description": "Hey guys I just spent time working on this note, hope you enjoy!", 
+        "upVotes": 40000, 
+        "downVotes": 2000
+        },
+        {"id": 5, 
+        "title":"SQL Questions", 
+        "content": "/PDFs/SQL Questions.pdf", 
+        "description": "Hey guys I just spent time working on this note, hope you enjoy!", 
+        "upVotes": 40000, 
+        "downVotes": 2000
+        },
+        {"id": 6, 
+        "title":"Grading-Scheme", 
+        "content": "/PDFs/Grading-Scheme.pdf", 
+        "description": "Hey guys I just spent time working on this note, hope you enjoy!", 
+        "upVotes": 40000, 
+        "downVotes": 2000
+        },
+        {"id": 7, 
+        "title":"Importing Data Python", 
+        "content": "/PDFs/Importing_Data_Python.pdf", 
+        "description": "Hey guys I just spent time working on this note, hope you enjoy!", 
+        "upVotes": 40000, 
+        "downVotes": 2000
+        },
+        {"id": 8, 
+        "title":"Algorithm Analysis", 
+        "content": "/PDFs/Algorithm_Analysis.pdf", 
+        "description": "Hey guys I just spent time working on this note, hope you enjoy!", 
+        "upVotes": 40000, 
+        "downVotes": 2000
+        }
+         
+]

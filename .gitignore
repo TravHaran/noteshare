@@ -1,3 +1,11 @@
+<<<<<<< HEAD
 node_modules/
 .next/
 .env.local
+=======
+__pycache__
+venv/
+backend/files/
+test_pdf_view/
+files/
+>>>>>>> 3e8345c1fbe977737c32f2e383186b2379d7e2cf
