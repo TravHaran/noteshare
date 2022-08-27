@@ -1,0 +1,133 @@
+
+@import "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css";
+@import "https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css";
+
+
+.container {
+    width: 100vw;
+    height: max-content;
+    padding-top: 19vh;
+    margin-bottom: 5vh;
+    font-size: 2.5vh;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    border-bottom: 0.4vh solid #FC7753;
+    filter: drop-shadow(0px 4px 2px #000);
+}
+
+.createLibWrapper {
+    display: flex;
+    border-radius: 4vh;
+    width: 17vw;
+    height: 6vh;
+    font-size: 1.8vh;
+    font-weight: 50;
+    color: rgb(0, 0, 0);
+    justify-content: center;
+    margin: auto;
+    background-color: #e4d1d1;
+    z-index: 39;
+    filter: drop-shadow(1px 2px 1px #FC7753);
+    cursor: pointer;
+}
+
+.addLibrary {
+    display: flex;
+    width: 6vh;
+    position: absolute;
+    top: 0px;
+    font-weight: 300;
+    margin-right: 2vw;
+    height: 6vh;
+    justify-content: center;
+    font-size: 5vh;
+    border: #FC7753;
+    border-radius: 50%;
+    filter: drop-shadow(1px 4px 2px #FC7753);
+    color: #FC7753;
+    background-color: #FCE7E7;
+    cursor: pointer;
+}
+
+.createLibrary {
+    font-weight: 300;
+} 
+
+.background {
+    background-color: #000;
+}
+
+
+
+.trending {
+    position: absolute;
+    top: 20vh;
+    left: 45vw;
+    font-size: 1.8vh;
+    margin: auto;
+    color: #fff;
+    z-index: 100;
+}
+
+
+.slide {
+    transform: scale(1.7);
+    justify-content: center;
+    transition: transform 900ms;
+    opacity: 0.5;    
+}
+
+.activeSlide {
+    justify-content: center;
+}
+
+
+.arrowNextWrapper {
+    position: absolute;
+    padding: 1.6vh 1vw;
+    border-radius: 50%;
+    background-color: #6D6767;
+    right: 10%;
+    top: 13.6vh;
+    cursor: pointer;
+    z-index: 100;
+}
+.arrowBackWrapper {
+    position: absolute;
+    padding: 1.6vh 1vw;
+    border-radius: 50%;
+    background-color: #6D6767;
+    left: 10%;
+    top: 13.6vh;
+    cursor: pointer;
+    z-index: 100;
+}
+
+.arrow {
+    transition: color 300ms;
+}
+.next {
+    right: 0%;
+    top: 50%
+}
+
+.prev {
+    left: 0%;
+    top: 50%;
+}
+
+/* .headerContainer {
+    display: flex;
+    border-radius: 4vh;
+    width: 17vw;
+    height: 6vh;
+    font-size: 1.2vh;
+    font-weight: 50;
+    color: #fff;
+    justify-content: center;
+    margin: auto;
+    background: #6D6767;
+    z-index: 39;
+    filter: drop-shadow(1px 2px 1px #FC7753);
+}*/
+

@@ -1,0 +1,75 @@
+.container {
+}
+
+.textContainer {
+    background-image: url('/static/profile_Background.png');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    display: flex;
+    z-index: 1;
+    width: 100%;
+    height: 80%;
+    justify-content: center;
+    font-size: 1.5vw;
+    border-bottom-left-radius: 1vw;
+    border-bottom-right-radius: 1vw;
+    box-shadow: 0 2vh 5px -2px #FC7753;
+}
+
+
+.Followers {
+    text-align: center;
+}
+.follow {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 3px;
+    grid-row-gap: 3px;
+}
+
+.iconAndHeader {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+}
+
+.profileIcon {
+}
+
+
+.text {
+    margin-top: 15vh;
+}
+.likedBooksContainer {
+    width: 50%;
+    margin: auto;
+    padding-top: 3vh;
+    text-align: center;
+}
+
+.likedBooks {
+    color: black;
+    display: grid;  
+    grid-row-gap: 3vh;     
+    grid-column-gap: 3vw;
+    margin-top: 8vh;
+    justify-content: center;
+    margin: auto;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.searchBooks {
+    background-color: #6D6767;
+    height: 5vh;
+    margin-top: 5vh;
+    margin-bottom: 2vh;
+    border-radius: 8%;
+    width: 60%;
+    text-align: center;
+    color: #fff;
+}
+
+.searchBooks::placeholder {
+    font-size: 1.6vh;
+    color: #fff;
+}

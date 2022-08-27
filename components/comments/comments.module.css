@@ -1,0 +1,45 @@
+.commentsContainer {
+    color: #000;
+    display: grid;
+    height: 70vh;
+    overflow: scroll;
+    background: rgba( 252, 231, 231, 0.7 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 13px );
+    -webkit-backdrop-filter: blur( 13px );
+    border-radius: 28px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    
+}
+
+.header {
+    text-align: center;
+}
+
+.text {
+    margin-left: 1vw;
+    font-size: 1.5vh;
+}
+
+.comments {
+    margin-left: 30px;
+}
+
+.accountName {
+    display:inline-block;
+    margin-left: 10px;
+    bottom: 50%;
+}
+
+.comment {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+}
+
+.profile {
+    height: 2vh;
+    width: 2vh;
+    background-color: rgb(136, 6, 6);
+    border-radius: 50%;
+    display: inline-block;
+  }

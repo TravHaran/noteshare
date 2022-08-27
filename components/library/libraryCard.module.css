@@ -1,0 +1,75 @@
+.container {
+    margin-top: 5vh;
+    padding: 2vh 1vw;
+    font-size: 2vh;
+    z-index: 10;
+}
+
+.booksContainer {
+    border-radius: 1.5vw;
+    width: min-content;
+    height: 100%;
+    padding: 1vh 2vw;
+    padding-bottom:15vh;
+    background: rgba(255, 255, 255, 0.2);
+border-radius: 16px;
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(5px);
+-webkit-backdrop-filter: blur(5px);
+border: 1px solid rgba(255, 255, 255, 0.3);
+cursor: pointer;
+
+}
+
+.bookName {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bookThumbnail {
+    height: 40vh;
+    width: 30vh;
+    background-repeat: no-repeat;
+    border-radius: 0.4vw;
+}
+
+.detailsWrapper {
+    width: 50%;
+    height: max-content;
+    margin: auto;
+    padding-top: 2vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    font-size: 2vh;    
+    color: #000;
+}
+
+.detailNums {
+    height: max-content;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 1vh 0.5vh;
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.Vote1 {
+    position: absolute;
+    right: 2vw;
+    text-align: center;
+
+}
+.Vote2 {
+    position: absolute;
+    left: 2vw;
+}
+
+.Vote {
+    position: static;
+}
