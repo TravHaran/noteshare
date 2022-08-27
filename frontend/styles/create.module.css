@@ -1,0 +1,52 @@
+.container {
+    position: absolute;
+    margin: auto;
+    z-index: 101;
+    height: 100%;
+    width: 100%;
+    font-size: 1.8vh;
+    text-align: center;
+    
+}
+.close {
+    position: absolute;
+    font-weight: 200;
+    z-index: 100;
+    right: 5vw;
+    cursor: pointer;
+}
+
+.NextWrapper {
+    position: absolute;
+    right: 5vw;
+    bottom: 0;
+    cursor: pointer;
+    z-index: 100;
+}
+.PrevWrapper {
+    position: absolute;
+    left: 5vw;
+    bottom: 0;
+    cursor: pointer;
+    z-index: 100;
+}
+
+
+.visibility {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.visibilitySwitch {
+    position:absolute;
+    left: 45%;
+    display: flex;
+    justify-content: center;
+}
+
+.addBooksContainer {
+    background: rgba(133, 103, 103, 0.45);
+    border-radius: 3vw;
+    padding: 1vh 3vw;
+    margin-top: 0.9vh;
+}

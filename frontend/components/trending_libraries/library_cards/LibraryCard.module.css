@@ -1,0 +1,41 @@
+.container {
+    margin: 3vh 2.5vw;
+}
+
+.cardContainer {
+    position: relative;
+    border-radius: 0.5vw;
+    height: 30vh;
+    width: 50vh;
+    cursor: pointer;
+    
+}
+
+.detailsContainer {
+    position: absolute;
+    left: 1.3vw;
+    bottom: auto;
+    width: 10vw;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 8vh;
+    font-size: 0.6vw;
+    bottom: 5%;
+    text-indent: 1vw;
+    background: rgba(255, 255, 255, 0.24);
+    border-radius: 2vh;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(13.1px);
+    -webkit-backdrop-filter: blur(13.1px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.extraDetails {
+    display: flex;
+}
+
+.patronCountIcon {
+    height: 2.5vh;
+}
