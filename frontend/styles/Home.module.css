@@ -1,9 +1,10 @@
 .container {
-  background-image: url("/static/Background.png");
+  height: 100%;
+  overflow: hidden;
 }
 
 .content {
-  background-image: url("/static/Background.png");
+  background-image: url("/static/mesh-gradient.png");
   display: grid;
   grid-template-columns: 1fr;
 }
