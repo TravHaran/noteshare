@@ -16,6 +16,6 @@ class Settings(BaseSettings):
     default_banner: str
 
     class Config:
-        env_file = "/Users/travisratnaharan/Documents/Work/noteshare/backend/.env"
+        env_file = "/Users/trav/Desktop/noteshare/backend/.env"
 
 settings = Settings()
