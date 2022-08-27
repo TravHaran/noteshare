@@ -1,0 +1,62 @@
+[  
+        {"id": 1,
+        "library": "Computer Science",
+        "thumbnail":"/static/library_banners/space_banner 1.png",
+        "public": true, 
+        "patrons": "47K"
+        },         
+        {"id": 2,
+        "library": "Theoretical Physics",
+        "thumbnail":"/static/library_banners/Physics_banner-3 1.png",
+        "public": true, 
+        "patrons": "25K"
+        },         
+        {"id": 3,
+        "library": "Machine Learning",
+        "thumbnail":"/static/library_banners/evening.jpg",
+        "public": true, 
+        "patrons": "21K"
+        },
+        {"id": 4,
+        "library": "SQL",
+        "thumbnail":"/static/library_banners/banner 1.png",
+        "public": true, 
+        "patrons": "13K"
+        },         
+        {"id": 5,
+        "library": "MCR3U5",
+        "thumbnail":"/static/library_banners/mathdept-banner 1.png",
+        "public": true, 
+        "patrons": "72K"
+        },         
+        {"id": 6,
+        "library": "Math CF4U",
+        "thumbnail":"/static/library_banners/space_banner 1.png",
+        "public": true, 
+        "patrons": "27K"
+        },         
+        {"id": 7,
+        "library": "Computer Analysis",
+        "thumbnail":"/static/library_banners/future.jpg",
+        "public": true, 
+        "patrons": "19K"
+        },         
+        {"id": 8,
+        "library": "Web Developement",
+        "thumbnail":"/static/library_banners/aquatics.webp",
+        "public": true, 
+        "patrons": "58K"
+        },         
+        {"id": 9,
+        "library": "Game Developement",
+        "thumbnail":"/static/library_banners/lambo_banner 1.png",
+        "public": true, 
+        "patrons": "42K"
+        },         
+        {"id": 10,
+        "library": "Mech Eng",
+        "thumbnail":"/static/library_banners/mechanics.jpg",
+        "public": true, 
+        "patrons": "34K"
+        }  
+]

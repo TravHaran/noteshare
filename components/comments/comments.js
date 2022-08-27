@@ -11,15 +11,15 @@ const Comments = () => {
       <div className={styles.comments}>
       {comments.comments.map((comment, idx) => {
         return (
-          <div className={styles.commentSection} key={comment}>
-            <div className={styles.profile}></div>
-            <div className={styles.accountName}>{comment.name}</div>
-            <div className={styles.comment} >
-              <div className={styles.content}>
-                <p key={idx}>{comment.content}</p>          
+          <div className={styles.commentSection} key={idx}>
+            <div className={styles.profile} ></div>
+            <div className={styles.accountName} >{comment.name}</div>
+            <div className={styles.comment}  >
+              <div className={styles.content} >
+                <p>{comment.content}</p>          
               </div>
               <div className={styles.like}>
-                <p key={comment.id}>{comment.likes}</p> 
+                <p >{comment.likes}</p> 
               </div>
             </div>          
           </div>

@@ -2,12 +2,16 @@
     "comments":[  
         {"id": 1, "name":"Shyam", "content":"yo this is my comment", "likes": 90},  
         {"id": 2, "name":"Bob", "content":"I love this!!!!", "likes": 73},  
-        {"id": 3, "name":"Jai", "content":"great Job!", "likes": 28},
-        {"id": 4, "name":"Jai", "content":"This trash bro", "likes": -42},  
-        {"id": 5, "name":"Jai", "content":"What is big O notation?", "likes": 2},  
-        {"id": 6, "name":"Jai", "content":"I love the design!!", "likes": 12},
-        {"id": 7, "name":"Jai", "content":"What is big O notation?", "likes": 32},
-        {"id": 8, "name":"Jai", "content":"great Job!", "likes": 9}  
+        {"id": 3, "name":"Ryan", "content":"great Job!", "likes": 28},
+        {"id": 4, "name":"Jim", "content":"This trash bro", "likes": -42},  
+        {"id": 5, "name":"Pam", "content":"What is big O notation?", "likes": 2},  
+        {"id": 6, "name":"Kevin", "content":"I love the design!!", "likes": 12},
+        {"id": 7, "name":"Oscar", "content":"What is big O notation?", "likes": 32},
+        {"id": 8, "name":"Pat", "content":"great Job!", "likes": 9},
+        {"id": 9, "name":"Lesley", "content":"great Job!", "likes": 9},
+        {"id": 10, "name":"Bill", "content":"great Job!", "likes": 9},
+        {"id": 11, "name":"Michael", "content":"great Job!", "likes": 9},
+        {"id": 12, "name":"Michael", "content":"great Job!", "likes": 9}
     ]
 
 }  

@@ -1,32 +1,21 @@
 import Navbar from "../components/navbar/navbar";
-import Image from 'next/image'
 import styles from "../styles/Home.module.css"
 
-import {useState} from 'react'
-
-import PDFViewer from "../components/book/pdf-viewer";
-
-import Comments from '../components/comments/comments'
+import {useRouter} from 'next/router'
+import {useState, useEffect} from 'react'
 
 export default function PDF() {
-  const [showComments, setShowComments] = useState(false)
+  const router = useRouter()
+  const [calledPush, setCalledPush] = useState(true);
 
-  const handleShowComments = () => {
-    setShowComments(!showComments)
-  }
+  useEffect(() => {
+    if (calledPush) {
+          router.push('/explore/explore/book/book?title=xHEP') 
+          setCalledPush(false)
+    } else {
+      return
+    }
 
-  return (
-    <div className={styles.container}>
-      <Navbar />
-     
-      <div className={styles.content} >
-            <PDFViewer />
-                      
-            {showComments && 
-              <Comments />               
-            }       
-      </div>
-
-    </div>
-    )
+  }, [])
 }
+ 

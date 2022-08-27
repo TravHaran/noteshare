@@ -1,0 +1,193 @@
+.container {
+    height: 100%;
+    overflow: hidden;
+    background-image: url("/static/mesh-gradient.png");
+   
+    display: grid;
+    grid-template-columns: 1fr; 
+  }
+  
+  .showCommentsIcon {
+    border-radius: 5px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  }
+  
+  .commentsIconWrapper {
+    position: abolute;
+  }
+  
+
+
+.navAndComments {
+    display: grid;
+    grid-template-rows: 4fr 2fr;
+    margin-left: 2vw;
+}
+
+.commentsIconWrapper {
+    margin-top: 9vh;
+}
+
+.grid {
+    display: grid;
+    justify-content: rigfht;
+    grid-template-columns: 15vw 4fr 1fr 2fr;
+
+}
+
+@media screen and (max-width: 710px) {
+    .grid {
+        grid-template-columns: 8vw 4fr 1fr;       
+    }
+    .commentsWrapper {
+        width: 100vw;
+    }
+
+}
+
+.commentsWrapper {
+    justify-self: end;
+}
+
+.navigateBooks {
+    display: grid;
+    margin-top: 15vh;
+
+}
+.navigateBooksButton {
+    margin: auto;
+    padding: 0.5vh 0.7vh;
+    border-radius: 50%;
+    background: rgba( 0, 0, 0, 0.4 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 9px );
+    -webkit-backdrop-filter: blur( 9px );
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+
+}
+
+.downArrow {
+    position: relative;
+    top: 0.13vw;
+    scale: 1.5;
+}
+.upArrow {
+    scale: 1.5;
+}
+
+.votingButtons {
+    margin: auto;
+    padding: 0.5vh 0.7vh;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 1.5vh;
+    backdrop-filter: blur( 9px );
+    -webkit-backdrop-filter: blur( 9px );
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
+.Vote {
+    border-radius: 30%;
+    
+    padding: 0.5vh 0.7vh;
+    display: flex;
+    color: #FC7753;
+    background: #6D6767;
+    justify-content: center;
+    border: 0.5vh solid #FC7753;
+    cursor: pointer;
+}
+
+.book {
+    margin: 0 auto;
+    width: min-content;
+    scroll-snap-type: y mandatory;
+    z-index: 90;
+    height: 72vh;
+
+    filter: drop-shadow(2px 4px 4px #000);
+}
+
+.bookDetailsWrapper {
+    position: absolute;
+    bottom: 5.5%;
+    mask-image: linear-gradient(transparent, white 60%, white);
+    -webkit-mask-image: linear-gradient(transparent, white 30%, white);
+    overflow-wrap: anywhere;
+    height: min-content;
+    font-size: 1.5vh;
+    display: none;
+    color: #fff;
+    width: 100%;
+    background: rgba( 0, 0, 0, 0.65 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 0.5px );
+    -webkit-backdrop-filter: blur( 0.5px );
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
+.page:hover + .bookDetailsWrapper {
+    display: inline-block;
+}
+
+/* 
+.bookPage {
+    position: absolute;
+    margin: 0 auto;
+} */
+
+.bookDetails {
+    margin-left: 20px;
+}
+
+
+.page {
+    margin-bottom: 65px;
+    display: flex;
+    justify-content: center;
+}
+
+.navigation {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 0 auto;
+    margin-bottom: 15%;
+    background: rgba( 255, 255, 255, 0.25 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
+.Arrow {
+    margin: auto;
+    padding: 1.5vh;
+    border-radius: 5%;
+    height: min-content;
+    font-size: 1.5vh;
+    justify-content: center;
+    background: rgba( 255, 255, 255, 0.25 );
+box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+backdrop-filter: blur( 4px );
+-webkit-backdrop-filter: blur( 4px );
+border-radius: 10px;
+border: 1px solid rgba( 255, 255, 255, 0.18 );
+}
+
+.index {
+    background-color: #6D6767;
+    width:max-content;
+    padding: 0 20px;
+    height: min-content;
+    font-size: 1.5vh;
+    border-radius: 12px;
+    font-weight: bold;
+    background: rgba( 255, 255, 255, 0.25 );
+box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+backdrop-filter: blur( 4px );
+-webkit-backdrop-filter: blur( 4px );
+border-radius: 10px;
+border: 1px solid rgba( 255, 255, 255, 0.18 );
+}

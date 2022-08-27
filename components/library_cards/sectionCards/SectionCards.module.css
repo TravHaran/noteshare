@@ -1,0 +1,62 @@
+.container {
+    background-image:url("/static/AI-Banner-3 1.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+    background-size: cover;
+    border: 0.5vh solid #FC7753;
+    border-style: solid none;
+    margin-bottom: 4vh;
+}
+
+.add {
+    margin: auto;
+    position: absolute;
+    margin-top: 8vh;
+    margin-left: 3vw;
+    display: inline-block;
+    font-size: 5vh;
+    padding: 1vh 2.5vh;
+    border: #FC7753;
+    border-radius: 50%;
+    color: #FC7753;
+    background-color: #FCE7E7;
+    cursor: pointer;
+}
+.libraryName {
+    font-size: 3vh;
+    margin-left: 1.5vw;
+}
+
+.cardsWrapper {
+    display: flex;
+    padding-left: 8vw;
+    overflow-y: hidden;
+}
+
+.cardWrapper {
+    font-size: 1vh;
+    padding: 0 2vw;
+}
+
+.formContainer {
+    display: grid;
+    height: 80%;
+    margin: auto;
+    grid-template-rows: 0fr 0fr 1fr 0fr 1fr;
+    text-align: center;
+    font-size: 2.1vh;
+}
+
+.input {
+    width: 50%;
+    margin: auto;
+}
+
+.submitButton {
+    width: 30%;
+    margin: auto;
+    padding: 2vh;
+    margin-top: 2vh;
+}
