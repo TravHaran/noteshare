@@ -46,7 +46,7 @@ app.include_router(download.router)
 app.include_router(chat.router)
 
 
-@app.get("/")
+@app.get("/api/")
 async def root():
     return {"message": "Welcome to NoteShare!"}
 

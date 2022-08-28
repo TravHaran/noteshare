@@ -9,7 +9,7 @@ from ..config import settings
 import os
 
 router = APIRouter(
-    prefix = "/libraries",
+    prefix = "/api/libraries",
     tags = ['Libraries']
 )
 

@@ -3,7 +3,7 @@ from .. import schemas, database, models, oauth2
 from sqlalchemy.orm import Session
 
 router = APIRouter(
-    prefix="/vote-comment",
+    prefix="/api/vote-comment",
     tags=['Vote_Comment']
 )
 

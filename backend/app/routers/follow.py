@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 
 router = APIRouter(
-    prefix = "/followers",
+    prefix = "/api/followers",
     tags = ['Followers']
 )
 
