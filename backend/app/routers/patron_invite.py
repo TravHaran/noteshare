@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 
 router = APIRouter(
-    prefix = "/patron-invites",
+    prefix = "/api/patron-invites",
     tags = ['Patron_Invites']
 )
 

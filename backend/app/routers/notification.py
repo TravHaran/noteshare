@@ -4,6 +4,6 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 
 router = APIRouter(
-    prefix = "/notifications",
+    prefix = "/api/notifications",
     tags = ['Notifications']
 )

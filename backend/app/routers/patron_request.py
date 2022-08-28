@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from ..database import get_db
 
 router = APIRouter(
-    prefix = "/patron-requests",
+    prefix = "/api/patron-requests",
     tags = ['Patron_Requests']
 )
 """ 

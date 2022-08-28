@@ -11,7 +11,7 @@ from ..utils import generate_thumbnail
 import os
 
 router = APIRouter(
-    prefix = "/books",
+    prefix = "/api/books",
     tags = ['Books']
 )
 

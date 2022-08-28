@@ -12,7 +12,7 @@ from ..utils import generate_thumbnail
 import os
 
 router = APIRouter(
-    prefix = "/downloads",
+    prefix = "/api/downloads",
     tags = ['Downloads']
 )
 

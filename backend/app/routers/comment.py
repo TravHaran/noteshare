@@ -6,7 +6,7 @@ from typing import List, Optional
 from ..database import get_db
 
 router = APIRouter(
-    prefix = "/comments",
+    prefix = "/api/comments",
     tags = ['Comments']
 )
   
