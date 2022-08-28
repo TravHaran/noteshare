@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from .routers import auth, book, comment, library, user, follow, notification, download
-from .routers import patron, patron_invite, patron_request, tag, vote_book, vote_comment
+from .routers import patron, patron_invite, patron_request, tag, vote_book, vote_comment, chat
 from .database import engine, SessionLocal
 from .config import settings
 import uuid
@@ -43,6 +43,7 @@ app.include_router(user.router)
 app.include_router(vote_book.router)
 app.include_router(vote_comment.router)
 app.include_router(download.router)
+app.include_router(chat.router)
 
 
 @app.get("/")
