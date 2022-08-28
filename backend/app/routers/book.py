@@ -209,7 +209,7 @@ def delete_book(id: int,
         raise HTTPException(status_code=status.HTTP_409_CONFLICT,
                             detail=f"Unable to delete book with id {id}")
     # if file-system deletion was successful we can proceed and delete its data from the database
-    book_query.delete()
+    book_query.delete(synchronize_session=False)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
