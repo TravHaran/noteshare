@@ -1,0 +1,14 @@
+[Unit]
+Description=noteshare production api
+After=network.target
+
+[Service]
+User=derrick
+Group=derrick
+WorkingDirectory=/home/derrick/app/src/backend
+Environment="PATH=/home/derrick/app/venv/bin"
+EnvironmentFile=/home/sanjeev/.env
+ExecStart=/home/derrick/app/venv/bin/gunicorn -w 4 -k uvicorn.workers.UvicornWorker app.main:app --bind 0.0.0.0:8000
+
+[Install] 
+WantedBy=multi-user.target  
