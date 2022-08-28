@@ -68,6 +68,29 @@ class CommentOut(BaseModel):
         orm_mode = True
 ###########################################
 
+############## Chat Schemas ##############   
+class ChatBase(BaseModel):
+    library_id: int
+    content: str
+
+class ChatCreate(ChatBase):
+    pass
+
+class Comment(ChatBase):
+    id: int
+    user_id: int
+    created_at: datetime
+    class Config:
+        orm_mode = True
+
+# class CommentOut(BaseModel):
+#     Comment: Comment
+#     votes: CommentVote
+#     user: UserOut
+#     class Config:
+#         orm_mode = True
+###########################################
+
 ############## Book Schemas ##############
 class BookBase(BaseModel):
     title: str

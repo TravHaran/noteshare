@@ -19,6 +19,7 @@ class Library(Base):
     patron_invite = relationship("PatronInvite", back_populates="libraries")
     patron_request = relationship("PatronRequest", back_populates="libraries")
     patrons = relationship("User", secondary="patrons", back_populates="libraries")
+    chats = relationship("Chat", back_populates="libraries")
 
 followers = Table(
     'followers', Base.metadata,
@@ -46,6 +47,7 @@ class User(Base):
     notifications = relationship("Notification", back_populates="users")
     patrons = relationship("Library", secondary="patrons", back_populates="users", overlaps="patrons")
     downloads = relationship("Download", back_populates="users")
+    chats = relationship("Chat", back_populates="users")
     # patron = relationship("Patron", back_populates="users")
     # patron_invite = relationship("PatronInvite", back_populates="users")
     # patron_request = relationship("PatronRequest", back_populates="users")
@@ -139,6 +141,17 @@ class BookVote(Base):
     # Relationship
     books = relationship("Book", back_populates="book_votes")
     users = relationship("User", back_populates="book_votes")
+
+class Chat(Base):
+    __tablename__ = "chats"
+    id = Column(Integer, primary_key=True, nullable=False)
+    library_id = Column(Integer, ForeignKey("libraries.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    content = Column(String, nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
+    # Relationships
+    libraries = relationship("Library", back_populates="chats")
+    users = relationship("User", back_populates="chats")
 
 class Comment(Base):
     __tablename__ = "comments"

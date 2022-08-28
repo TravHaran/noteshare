@@ -70,10 +70,10 @@ def patron_request(
                             detail=f"library with id: {patron_request.library_id} is either private or does not exist")
     patron_check = db.query(models.Patron).filter(models.Patron.user_id==current_user.id,
                                                     models.Patron.library_id==patron_request.library_id,
-                                                    models.Patron.admin_level==patron_request.admin_level).first()
+                                                    (models.Patron.admin_level==patron_request.admin_level) | (models.Patron.admin_level=="librarian")).first()
     if patron_check:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT,
-                                detail=f"User of id {current_user.id} is already has {patron_request.admin_level} access to library with id {patron_request.library_id}")
+                                detail=f"User of id {current_user.id} is either the librarian or already has {patron_request.admin_level} access to library with id {patron_request.library_id}")
     if patron_request.admin_level == "reader":
         # check if the user is already a patron in the library
         patron_check = db.query(models.Patron).filter(models.Patron.user_id==current_user.id,

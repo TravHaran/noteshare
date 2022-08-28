@@ -29,7 +29,8 @@ def create_comment(comment: schemas.CommentCreate,
 @router.get("/{id}")
 def get_comments_on_book(id: int,
                         db: Session = Depends(get_db),
-                        current_user: int = Depends(oauth2.get_current_user)):
+                        current_user: int = Depends(oauth2.get_current_user),
+                        limit: int = 50, skip: int = 0):
     # check if book exists
     book_query = db.query(models.Book).filter(models.Book.id == id)
     book = book_query.first()
@@ -55,7 +56,7 @@ def get_comments_on_book(id: int,
                                                                 models.CommentVote.user_id, 
                                                                 models.CommentVote.dir, 
                                                                 models.Patron.admin_level)
-    results = comment_query.order_by(models.Comment.created_at.desc()).all()
+    results = comment_query.order_by(models.Comment.created_at.desc()).limit(limit).offset(skip).all()
     return results
 
 @router.put("/{id}")
