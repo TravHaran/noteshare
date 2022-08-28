@@ -12,6 +12,17 @@
     justify-content: center;
 }
 
+@media (max-width: 900px) {
+    .bookContainer { 
+        grid-template-columns: repeat(2, 1fr); 
+    }
+}
+@media (max-width: 550px) {
+    .bookContainer { 
+        grid-template-columns: 1fr; 
+    }
+}
+
 .titleText {
     padding-top: 7vh;
     color: #fff;
@@ -69,6 +80,15 @@
 }
 
 .expand {
-    position: absolute;
-    right: 0;
+    background-color: rgb(255, 255, 255);
+    padding: 0.7vh 0.7vw;
+    border-radius: 1vh;
+    position: fixed;
+    right: 3vw;
+    bottom: 2vh;
+    transition: all .2s ease-in-out;
+}
+
+.expand:hover {
+    transform: scale(1.2);
 }

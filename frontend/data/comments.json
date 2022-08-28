@@ -1,8 +1,8 @@
 {
     "comments":[  
-        {"id": 1, "name":"Shyam", "content":"yo this is my comment", "likes": 90},  
+        {"id": 1, "name":"Francis B", "content":"yo this is my comment", "likes": 90},  
         {"id": 2, "name":"Bob", "content":"I love this!!!!", "likes": 73},  
-        {"id": 3, "name":"Ryan", "content":"great Job!", "likes": 28},
+        {"id": 3, "name":"Ryan T", "content":"great Job!", "likes": 28},
         {"id": 4, "name":"Jim", "content":"This trash bro", "likes": -42},  
         {"id": 5, "name":"Pam", "content":"What is big O notation?", "likes": 2},  
         {"id": 6, "name":"Kevin", "content":"I love the design!!", "likes": 12},

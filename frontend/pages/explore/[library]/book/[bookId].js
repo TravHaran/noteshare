@@ -15,9 +15,12 @@ import {useEffect} from 'react'
 import {useRouter} from 'next/router'
 
 
-export default function Book() {
+const Book = (books) => {
 
   const router = useRouter()
+
+  console.log(books)
+
 
   useEffect(() => {
     router.beforePopState(({ as }) => {
@@ -43,3 +46,30 @@ export default function Book() {
     </div>
     )
 }
+
+// export async function getServerSideProps() {
+//   const url = "https://noteshare.live/api/books"
+//   console.log(url)
+//   const res = await fetch(url);
+//   const dataExport = await res.json();
+//   console.log(dataExport)
+//   return { props: {dataExport} }
+// }
+
+  var myHeaders = new Headers();
+  myHeaders.append("Authorization", process.env.JWT_TOKEN);
+  var requestOptions = {
+    method: 'GET',
+    headers: myHeaders,
+    redirect: 'follow'
+  };
+
+export async function getServerSideProps() {
+    const res = await fetch('https://noteshare.live/api/books/', requestOptions)
+     const books = await res.json()
+     console.log(books);
+  
+    return { props: {books} }
+}
+
+export default Book;
