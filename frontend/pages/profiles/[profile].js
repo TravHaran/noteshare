@@ -11,7 +11,7 @@ import files from '../../data/files.json'
 import LibraryCard from '../../components/library/libraryCard'
 
 
-const profile = () => {
+const Profile = () => {
   const [IslikedBooks, setIsLikedBooks] = useState(false)
   const [filteredLikedBooks, setFilteredLikedBooks] = useState([])
   const [likedBooks, setLikedBooks] = useState(files)
@@ -32,7 +32,7 @@ const profile = () => {
     setFilteredLikedBooks(likedBooks.filter(book =>
     book.title.toLowerCase().includes(searchField.toLowerCase())
 ))
-}, [searchField])
+}, [likedBooks, searchField])
 
   return (
     <div className={styles.container}>
@@ -42,7 +42,7 @@ const profile = () => {
           <div className={styles.logoAndText}>
             <div className={styles.text}>
               <div className={styles.iconAndHeader}>
-                  <Image src="/static/Profile.svg" className={styles.profileIcon} width={100} height={100} />
+                  <Image src="/static/Profile.svg" alt="profile Icon" className={styles.profileIcon} width={100} height={100} />
                   <h1>Francis B.</h1>  
               </div>
 
@@ -81,4 +81,4 @@ const profile = () => {
   )
 }
 
-export default profile
+export default Profile

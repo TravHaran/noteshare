@@ -1,0 +1,58 @@
+.libraryChatContainer {
+    background-color: #fff;
+    z-index: 1000;
+    color: #000;
+    width: 20%;
+    border-radius: 0.8vw;
+    height: 50vh;
+    font-size: 2vh;
+    padding: 3vh;
+    position: fixed;
+    right: 3vw;
+    bottom: 9vh;
+}
+
+.close{
+    position: absolute;
+    right: 2vw;    
+    top: 1vh;
+    cursor: pointer;
+} 
+
+.typingContainer {
+    background-color: #000;
+    color: #fff;
+    width: 90%;
+    height: 5vh;
+    margin-top: 1vh;
+    border-radius: 1vw;
+}
+
+.libraryName {
+    text-align: center;
+    font-size: 3vh;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chatsContainer {
+    background-color: rgb(255, 255, 255);
+    color: #000;
+    width: 100%;
+    height: 70%;
+    overflow-y: scroll;
+    border-radius: 1vw;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.chatsContainer::-webkit-scrollbar {
+    display: none;
+}
+
+.sendMessageContainer {
+    display: flex;
+}

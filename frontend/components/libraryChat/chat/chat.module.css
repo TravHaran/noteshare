@@ -1,0 +1,22 @@
+.chatContainer {
+    margin-top: 3vh;
+    background-color:antiquewhite;
+    padding: 1vh 1vw;
+    border-radius: 1vw;
+}
+
+.profile {
+    height: 25px;
+    width: 25px;
+    background-color: #00419c;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .profileAndName {
+    display: flex
+  }
+
+  .username {
+    margin-left: 1vw;
+  }

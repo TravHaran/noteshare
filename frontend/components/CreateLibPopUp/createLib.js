@@ -79,13 +79,13 @@ const CreateLibPopUp = (props) => {
   height: 40px;
   padding: 0 20px;
   cursor: pointer;
-  box-sizing; border-box;
+  box-sizing: border-box;
   `
 
   const StyledFieldSet = styled.fieldset`
   border: 1px solid #ddd;
   border-radius: 5px;
-  paddong: 10px;
+  padding: 10px;
   margin: 20px 0;
 
   legend {
