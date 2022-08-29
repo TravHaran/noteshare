@@ -1,5 +1,7 @@
 import styles from './navbar.module.css';
 import Image from 'next/image'
+import Login from './login/login'
+import SignUp from './signUp/signUp'
 import Link from 'next/link'
 import {useRouter} from 'next/router';
 import {useState} from 'react'
@@ -80,7 +82,12 @@ const Navbar = () => {
             <div className={styles.profileDropDown}>
             {
                 isLoggedIn &&
-                <div><Link href={`/profiles/${username}`}><p className={styles.dropDownText}>{username}</p></Link></div>
+                <div>
+                    <Link href={`/profiles/${username}`}>
+                        <p className={styles.dropDownText}>{username}</p>
+                    </Link>
+                    <p className={styles.dropDownText}>Sign Out</p>
+                </div>
             }
             {
                 isLoggedIn === false &&
@@ -122,17 +129,7 @@ const Navbar = () => {
                 }
             }
         }>
-            <div className={styles.loginContainer}>
-                <h1 className={styles.loginHeader}>Welcome Back!</h1>
-                <form className={styles.loginForm} id="login" onSubmit={handleSubmitLogin}> 
-                    <label className={styles.loginLabels} >Email</label>
-                    <input type="email" className={styles.email} id="email"/>
-                    <label className={styles.loginLabels} >Password</label>
-                    <input type="text" className={styles.password} id="password"/>
-                    
-                </form>
-                <button type="submit" form="login" className={styles.loginSubmit}>Login</button>
-            </div>
+            <Login closeLoginModal={setLoginModal} setIsLoggedIn={setIsLoggedIn} setUsername={setUsername}/>
         </Modal>
 
         <Modal isOpen={registerModal} 
@@ -162,20 +159,7 @@ const Navbar = () => {
                 }
             }
         }>
-            <div className={styles.signUpContainer}>
-                <h1 className={styles.header}>Join The Community</h1>
-                <form className={styles.signUpForm} onSubmit={handleSubmitSignUp} id="signUpForm">
-                    <label className={styles.signUpLabels}>Username</label>
-                    <input className={styles.SignUpUsername} id="username" required/>
-                    <label className={styles.signUpLabels}>Email</label>
-                    <input className={styles.SignUpEmail} type="email" id="email" required/>
-                    <label className={styles.signUpLabels}>Password</label>
-                    <input className={styles.SignUpPassword} type="password" onChange={validatePassword} id="password" required/>
-                    <label className={styles.signUpLabels}>Confirm Password</label>
-                    <input className={styles.SignUpConfirm} type="password" onChange={validatePassword} id="confirmPassword" required/>
-                </form>
-                    <button type="submit" form="signUpForm" className={styles.SignUpSubmit}>Sign Up</button>
-            </div>
+            <SignUp closeRegisterModal={setRegisterModal} setIsLoggedIn={setIsLoggedIn} setUsername={setUsername} />
         </Modal>
         
         <div className={styles.categoriesWrapper}>

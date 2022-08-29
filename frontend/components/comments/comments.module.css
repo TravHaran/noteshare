@@ -1,19 +1,42 @@
-.commentsContainer {
-    color: #000;
-    display: grid;
-    height: 70vh;
-    overflow: scroll;
+.container {
     background: rgba( 252, 231, 231, 0.7 );
     box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
     backdrop-filter: blur( 13px );
     -webkit-backdrop-filter: blur( 13px );
-    border-radius: 28px;
+    border-top-left-radius: 28px;
+    border-bottom-left-radius: 28px;
     border: 1px solid rgba( 255, 255, 255, 0.18 );
-    
 }
+
+.commentsContainer {
+    color: #000;
+    display: grid;
+    height: 75vh;
+    width: 20vw;
+    overflow-y: scroll;
+}
+
+@media screen and (max-width: 810px) {
+    .commentsContainer {
+        width: 100%;
+        
+    }
+}
+
+.profileAndUsername {
+}
+
+.commentsContainer::-webkit-scrollbar {
+    display: none;
+  }
 
 .header {
     text-align: center;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .text {
@@ -22,13 +45,15 @@
 }
 
 .comments {
-    margin-left: 30px;
+    margin-left: 1vw;
 }
 
 .accountName {
-    display:inline-block;
-    margin-left: 10px;
-    bottom: 50%;
+    margin-left: 0.1vw;
+}
+
+.creator {
+    display: inline-block;
 }
 
 .comment {
@@ -41,5 +66,23 @@
     width: 2vh;
     background-color: rgb(136, 6, 6);
     border-radius: 50%;
-    display: inline-block;
+    display: flex;
   }
+
+.submitCommentContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.typeComment {
+    color: #fff;
+    padding: 1vh 1vw;
+    width: 80%;
+    background-color: #000;
+    border-radius: 2vw;
+}
+
+.submitCommentBtn {
+
+}
+

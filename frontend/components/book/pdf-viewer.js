@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import workerSrc from "../../pdf-worker";
-import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
 import Image from 'next/image'
 import Comments from '../comments/comments'
 import comments from "../../data/comments.json";
@@ -26,6 +25,7 @@ const PDFViewer = (props) => {
   const [pageNumber, setPageNumber] = useState(1);
   const [pageHeight, setPageHeight] = useState(0);
   const [description, setDescription] = useState('')
+  const [title, setTitle] = useState("")
   const [owner, setOwner] = useState('')
   const [library, setLibrary] = useState('')
   const [upVotes, setupVotes] = useState(null)
@@ -39,18 +39,18 @@ useEffect(() => {
   if (!router.isReady) return;
   pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@2.12.313/build/pdf.worker.min.js`;
   const id= router.query.title 
-  console.log(id) 
-  console.log(router.query.title)
+  const elementPos = bookSet.map(function(book) {return book.id; }).indexOf(id)
+  setIndex(elementPos)
   bookSet.map(function(book) {
     if (book.id === id) {
       setFile(book.content)
       setOwner(book.owner)
+      setTitle(book.title)
       setLibrary(book.library)
       setDescription(book.description)
       setupVotes(book.upVotes)
       setdownVotes(book.downVotes)
-
-    }
+    } 
   })
 }, [router.query.title, router.isReady, bookSet, router, upVote, downVote, showComments, index, pageNumber, numPages])
     const scaleUp = {scale: 1.1};
@@ -89,8 +89,7 @@ useEffect(() => {
         } 
     }
     function BookChangePrevious() {
-        if(index !== 0) {
-              setIndex(index => index - 1)
+        if(index !== 0) {   
         const myFile = bookSet[index - 1]
         const pdf = myFile['content']   
         const myDescription = myFile["description"]
@@ -133,13 +132,11 @@ useEffect(() => {
       setUpVote(!upVote)
       setDownVote(false)
     }
-    console.log("upVoted", {upVote})
 
     const handleDownVote = () => {
       setDownVote(!downVote)
       setUpVote(false)
     }
-    console.log("downVoted", {downVote})
 
     const nextPageHandler = () => {
       if(pageNumber === numPages) {
@@ -170,30 +167,66 @@ useEffect(() => {
       debouncedHandleResize()
     }    
 
-//   useEffect(()=> {
-  
-//     const debouncedHandleResize = debounce(function handleResize() {
-//       const h = window.innerHeight;
-//       const pageHeightAlg = 0.62 * h;
-//       setPageHeight(pageHeightAlg)}, 250)
+  useEffect(()=> {
+    const debouncedHandleResize = debounce(function handleResize() {
+      const h = window.innerHeight;
+      const pageHeightAlg = 0.62 * h;
+      setPageHeight(pageHeightAlg)}, 250)
 
-//     window.addEventListener('resize', debouncedHandleResize)
-//     return _ => {
-//       window.removeEventListener('resize', debouncedHandleResize)
-//     }
-// }, [])
+    window.addEventListener('resize', debouncedHandleResize)
+    return _ => {
+      window.removeEventListener('resize', debouncedHandleResize)
+    }
+}, [])
 
+  const searchPage = (event) => {
+    const inputVal = document.getElementById("setPageNum").value
+    if(event.key === "." || event.key === "-"){
+      event.preventDefault();
+    }
+    else if(event.key === 'Enter') {
+      if(parseInt(inputVal) > numPages) {
+        console.log("no")
+        document.getElementById("setPageNum").value = ""
+      }else if(parseInt(inputVal) <= 0) {
+        console.log("no")
+        document.getElementById("setPageNum").value = ""
+      }
+      else {
+          setPageNumber(parseInt(inputVal))        
+      } 
+      document.getElementById("setPageNum").value = ""
+    }
+  }
+
+  function nFormatter(num, digits) {
+    const lookup = [
+      { value: 1, symbol: "" },
+      { value: 1e3, symbol: "k" },
+      { value: 1e6, symbol: "M" },
+      { value: 1e9, symbol: "G" },
+    ];
+    const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+    var item = lookup.slice().reverse().find(function(item) {
+      return num >= item.value;
+    });
+    return item ? (num / item.value).toFixed(1).replace(rx, "$1") + item.symbol : "0";
+  }
 
   return (
     <div className={styles.container}>
       <div className={styles.col1}>
       <div className={styles.grid}>
+      <div className={styles.bookSummaryContainer}>
+      <h1>Book Summary</h1>
+      <p>Nisi Lorem eiusmod non excepteur aliquip ullamco nisi qui Lorem veniam quis. Velit nisi deserunt dolor deserunt adipisicing commodo pariatur aliquip eiusmod ullamco laborum officia consectetur dolor. Magna dolor voluptate est adipisicing duis duis do laborum elit. Adipisicing labore aute do officia. Ipsum aute culpa do excepteur laborum consectetur labore sunt nostrud anim. Occaecat amet ullamco culpa nisi Lorem pariatur in voluptate.Incididunt nostrud esse exercitation qui magna incididunt consectetur tempor id nulla do voluptate. Laborum laborum ut aliqua dolor culpa aute mollit veniam officia veniam reprehenderit nostrud anim consequat. Esse pariatur cillum laborum irure duis dolore sint pariatur sit fugiat. Culpa pariatur tempor excepteur velit magna excepteur. Veniam velit ipsum dolore occaecat elit duis pariatur minim ullamco magna ipsum in. Minim ex aute elit quis ad mollit incididunt reprehenderit. Sunt proident fugiat sunt aute et proident proident nisi in dolor cupidatat.</p>
+      </div> 
         <div className={styles.votingButtons}>
-          <h3>{upVotes}</h3>            
+          <h3>{nFormatter(upVotes, 2)}</h3>            
           <div className={upVote ? styles.Voted: styles.Vote} onClick={handleUpVote}>
           <Image src="/static/spearUp.svg" width={20} height={20} alt="upVote" />      
           </div>
-          <h3>{downVotes}</h3>             
+          <h3>{nFormatter(downVotes, 2)}</h3>             
           <div className={downVote ? styles.Voted: styles.Vote} onClick={handleDownVote}>
           <Image src="/static/spearDown.svg" width={20} height={20} alt="downVote" /> 
           </div>
@@ -228,7 +261,8 @@ useEffect(() => {
           <div className={styles.navigation}>
             <motion.button whileHover={{ ...scaleUp }} className={styles.Arrow} onClick={previousPageHandler}>&#8592;</motion.button>
             <div className={styles.index}>
-              <p>{pageNumber}/{numPages}</p>
+              <p><input className={styles.setPageNum} type="number" min={0}
+              id="setPageNum" onKeyDown={searchPage} placeholder={pageNumber}/>/{numPages}</p>
             </div>
             <motion.button whileHover={{ ...scaleUp }} className={styles.Arrow} onClick={nextPageHandler}>&#8594;</motion.button>        
           </div>  
@@ -237,7 +271,7 @@ useEffect(() => {
       {
         showComments &&
         <div className={styles.commentsWrapper}>
-          <Comments />        
+          <Comments bookName={title} owner={owner} />        
         </div>
 
       }   
