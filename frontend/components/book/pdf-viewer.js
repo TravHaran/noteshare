@@ -4,7 +4,7 @@ import workerSrc from "../../pdf-worker";
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
 import Image from 'next/image'
 import Comments from '../comments/comments'
-import comments from "../../../data/comments.json";
+import comments from "../../data/comments.json";
 
 
 import {useRouter} from 'next/router'

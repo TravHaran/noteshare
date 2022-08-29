@@ -1,5 +1,5 @@
 import styles from './comments.module.css';
-import comments from '../../../data/comments.json'
+import comments from '../../data/comments.json'
 
 const Comments = () => {
   return (
